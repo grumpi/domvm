@@ -204,6 +204,8 @@ myPeeps.push(
 vm.redraw();
 ```
 
+**Note:** The view's `render()` function must return a single root node.
+
 ---
 #### Subviews, Components, Patterns
 
