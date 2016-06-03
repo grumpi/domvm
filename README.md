@@ -3,7 +3,7 @@ domvm.js (DOM ViewModel)
 A thin, fast, dependency-free vdom view layer _(MIT Licensed)_
 
 ---
-#### Philosophy
+### Philosophy
 
 UI-centric, exclusively declarative components suffer from locked-in syndrome, making them unusable outside of a specific framework. Frequently they must extend framework classes and adhere to compositional restrictions which typically mimic the underlying DOM tree and sacrifice powerful exposed APIs for the sake of designer-centric ease and beauty.
 
@@ -12,7 +12,7 @@ Instead, domvm offers straightforward, pure-js development without opinionated s
 Architect reusable apps without fighting a pre-defined structure, learning tomes-worth of idiomatic abstractions or leaning on non-reusable, esoteric template DSLs.
 
 ---
-#### Features
+### Features
 
 - Thin API, no dependencies, build = concat & min
 - Fast (2x Mithril, React, Riot; 1.3x Vue, Angular 2, Aurelia) - [dbmonster](http://leeoniya.github.io/domvm/test/bench/dbmonster/), [granular patch](http://leeoniya.github.io/domvm/test/bench/patch/)
@@ -27,21 +27,21 @@ Architect reusable apps without fighting a pre-defined structure, learning tomes
 - IE9+ with tiny polyfills/shims [sources](src/polyfills), [all compressed](dist/polyfills.min.js): `view` (rAF, element.matches), `watch` (Promise, fetch)
 
 ---
-#### Demos
+### Demos
 
 ![domvm Demos](demos.png)
 
 https://leeoniya.github.io/domvm/demos/
 
 ---
-#### Documentation
+### Documentation
 
 0. [Installation](#installation)
 0. [Modules, Building](#modules-building)
 0. [Template Reference](#template-reference)
-0. [Create, Modify, Redraw](#create-modify-redraw)
+0. [Views](#views-create-modify-redraw)
 0. [Subviews, Components, Patterns](#subviews-components-patterns)
-0. [Trigger Ancestor redraw()](#trigger-ancestor-redraw)
+0. [Redrawing Ancestor Views](#redrawing-ancestor-views)
 0. [Lifecycle Hooks, Async Animation](#lifecycle-hooks-async-animation)
 0. [Synthetic Events, emit(), on:{}](#synthetic-events-emit-on)
 0. [DOM Refs, Raw Element Access](#dom-refs-raw-element-access)
@@ -50,7 +50,7 @@ https://leeoniya.github.io/domvm/demos/
 0. ...WIP, help wanted! https://github.com/leeoniya/domvm/issues/36
 
 ---
-#### Installation
+### Installation
 
 **Browser**
 
@@ -65,7 +65,7 @@ var domvm = require("domvm");
 ```
 
 ---
-#### Modules, Building
+### Modules, Building
 
 Each module is a single js file in `/src`. The first 3 are the "core", the rest are optional and can be replaced by your own implementations. For development, just include each via `<script>` tags.
 
@@ -91,7 +91,7 @@ java -jar compiler.jar
 ```
 
 ---
-#### Template Reference
+### Template Reference
 
 domvm templates are a superset of [JSONML](http://www.jsonml.org/)
 
@@ -164,7 +164,9 @@ function h() {
 ```
 
 ---
-#### Create, Modify, Redraw
+### Views
+
+Here is an example for creating a view, modifying the data associated with it, and redrawing.
 
 ```js
 // view closure
@@ -207,7 +209,7 @@ vm.redraw();
 **Note:** The view's `render()` function must return a single root node.
 
 ---
-#### Subviews, Components, Patterns
+### Subviews, Components, Patterns
 
 In very large apps, you may need to optimize performance by restricting what you redraw. Let's restructure the example into nested sub-views.
 
@@ -376,7 +378,7 @@ var people = domvm.view(PeopleView, myPeeps);
 The above examples demonstrate the flexibility afforded by uniformly-composable imperative and declarative paradigms. For instance, models can expose multiple views which can then be consumed by disjoint parts of some larger template, such as a single `NavMenu` component with shared state and sitemap tree but exposing split `TopNav`, `SideNav` and `FooterNav` views. Alternatively or additionally, more views of your model can be constructed after the fact if you choose to expose enough state/api.
 
 ---
-#### Trigger Ancestor redraw()
+#### Redrawing Ancestor Views
 
 You can invoke `.redraw()` of any ancestor view (e.g. parent, root) by passing a numeric `level`.
 
@@ -392,7 +394,7 @@ vm.redraw(1000);
 ```
 
 ---
-#### Lifecycle Hooks, Async Animation
+### Lifecycle Hooks, Async Animation
 
 **Demo:** [lifecycle-hooks](https://leeoniya.github.io/domvm/demos/lifecycle-hooks.html) different hooks animate in/out with different colors.
 
@@ -418,7 +420,7 @@ Usage: `vm.hook("didRedraw", function() {...})` or `vm.hook({didRedraw: function
 View-level `will*` hooks are not yet promise handling, so cannot be used for delay, but you can just rely on the view's root node's hooks to accomplish similar goals.
 
 ---
-#### Synthetic Events, emit(), on()
+### Synthetic Events, emit(), on()
 
 Custom events can be emitted up the view hierarchy (with data) and handled by ancestors. When a matching handler is found, the callbacks are executed and the bubbling halts.
 
@@ -447,7 +449,7 @@ function ChildView(vm) {
 ```
 
 ---
-#### Node Refs, DOM Element Access
+### Node Refs, DOM Element Access
 
 Virtual nodes created by templates can be accessd via `vm.refs.*`. Since DOM nodes can be recycled, always access the refs object via the vm since it will get re-generated on each redaw.
 
@@ -469,7 +471,7 @@ function SomeView(vm) {
 ```
 
 ---
-#### Isomorphism, html(), attach()
+### Isomorphism, html(), attach()
 
 ```js
 function SomeView(vm) {
