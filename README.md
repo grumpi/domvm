@@ -95,14 +95,6 @@ java -jar compiler.jar
 
 domvm templates are a superset of [JSONML](http://www.jsonml.org/)
 
-If you prefer *hyperscript*, just use this wrapper:
-
-```js
-function h() {
-	return Array.prototype.slice.call(arguments);
-}
-```
-
 ```js
 ["p", "Hello"]												// plain tags
 ["p#foo.bar.baz", "Hello"]									// id and class shorthands
@@ -161,6 +153,14 @@ function h() {
 ["p", {_key: "myParag"}, "Some text"]						// keyed nodes
 ["p", {_ref: "myParag"}, "Some text"]						// named refs (via vm.refs.myParag)
 ["p", {_data: {foo: 123}}, "Some text"]						// per-node data (faster than attr)
+```
+
+If you prefer *hyperscript*, just use this wrapper:
+
+```js
+function h() {
+	return Array.prototype.slice.call(arguments);
+}
 ```
 
 ---
@@ -377,7 +377,6 @@ var people = domvm.view(PeopleView, myPeeps);
 
 The above examples demonstrate the flexibility afforded by uniformly-composable imperative and declarative paradigms. For instance, models can expose multiple views which can then be consumed by disjoint parts of some larger template, such as a single `NavMenu` component with shared state and sitemap tree but exposing split `TopNav`, `SideNav` and `FooterNav` views. Alternatively or additionally, more views of your model can be constructed after the fact if you choose to expose enough state/api.
 
----
 #### Redrawing Ancestor Views
 
 You can invoke `.redraw()` of any ancestor view (e.g. parent, root) by passing a numeric `level`.
