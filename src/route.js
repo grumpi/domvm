@@ -3,6 +3,8 @@
 
 	var stack = [], pos = null,		// these should go into sessionStorage
 		useHist = false,
+		willEnter = null,
+		willExit = null,
 		root = "";
 
 	domvm.route = function(routeFn, imp) {
@@ -32,8 +34,13 @@
 			},
 			config: function(opts) {
 				useHist = opts.useHist;
+
 				if (useHist)
 					root = opts.root || "";
+
+				willEnter = opts.willEnter || null;
+				willExit = opts.willExit || null;
+
 				init = opts.init || null;
 			},
 			refresh: function() {
@@ -68,20 +75,31 @@
 					var next = stack[toPos];
 
 					var canExit = true;
+					var canEnter = true;
 
 					if (pos !== null) {
-						var onexit = routes[prev.name].onexit;
-						canExit = !onexit ? true : onexit.apply(null, (prev ? [prev.segs, prev.query, prev.hash] : []).concat(next));
+						if (willExit)
+							canExit = willExit(prev, next);
+
+						if (canExit !== false) {
+							var onexit = routes[prev.name].onexit;
+							canExit = !onexit ? true : onexit.apply(null, (prev ? [prev.segs, prev.query, prev.hash] : []).concat(next));
+						}
+						else {
+						//	revert nav?
+						}
 					}
 
 					if (canExit !== false) {
-						var onenter = routes[next.name].onenter;
-						var canEnter = onenter.apply(null, (next ? [next.segs, next.query, next.hash] : []).concat(prev));
+						if (willEnter)
+							canEnter = willEnter(next, prev);
 
-						if (canEnter === false) {
-						//	revert nav?
+						if (canEnter !== false) {
+							var onenter = routes[next.name].onenter;
+							canEnter = onenter.apply(null, (next ? [next.segs, next.query, next.hash] : []).concat(prev));
 						}
-						else {
+
+						if (canEnter !== false) {
 							if (useHist) {
 								gotoLocChg = true;
 								history[repl ? "replaceState" : "pushState"](null, "title", next.href);
@@ -99,8 +117,10 @@
 								}
 							}
 
-
 							pos = toPos;
+						}
+						else {
+						//	revert nav?
 						}
 					}
 				}

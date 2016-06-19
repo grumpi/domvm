@@ -1,5 +1,7 @@
-domvm.js (DOM ViewModel)
-------------------------
+<img src="logo.png" alt="domvm logo" style="max-width:100%;" align="right" height="60">
+
+domvm (DOM ViewModel)
+---------------------
 A thin, fast, dependency-free vdom view layer _(MIT Licensed)_
 
 ---
@@ -141,7 +143,6 @@ domvm templates are a superset of [JSONML](http://www.jsonml.org/)
 ])
 
 ["#ui",														// same as "div#ui"
-	[SomeViewFn],											// sub-view w/closured data
 	[NavBarView, navbar],									// sub-view w/model
 	[PanelView, panel, "panelA"],							// sub-view w/model & key
 	preInitVm,												// pre-initialized ViewModel
@@ -558,7 +559,11 @@ function MyRouter(router, deps) {
 			// Use it to mount or redraw your app's root view. It's recommended that you dep-inject
 			// the router into your app before mounting so it can use href generation for its templates
 			// and `router.location()` to determine and render the appropriate views
-		}
+		},
+		// if provided, the funcs below will fire after a route is matched but before its handler is invoked.
+		// they can return `false` to prevent route's onenter/onexit handlers from firing
+		willEnter: function(to, from) {},
+		willExit:  function(from, to) {},
 	});
 
 	return {
